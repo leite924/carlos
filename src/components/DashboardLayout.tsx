@@ -1,7 +1,7 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  Bell,
   Home,
   Package2,
   Users,
@@ -12,29 +12,40 @@ import {
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
+import { UserNav } from "./UserNav";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
   title: string;
 }
 
+const allNavItems = [
+  { href: "/dashboard", label: "Dashboard", icon: Home, roles: ["SUPERADMIN", "ADMIN", "MOTORISTA"] },
+  { href: "/trucks", label: "Caminhões", icon: Truck, roles: ["SUPERADMIN", "ADMIN", "MOTORISTA"] },
+  { href: "/service-orders", label: "Ordens de Serviço", icon: FileText, roles: ["SUPERADMIN", "ADMIN", "MOTORISTA"] },
+  { href: "/clients", label: "Clientes", icon: Users, roles: ["SUPERADMIN", "ADMIN"] },
+  { href: "/maintenance", label: "Manutenção", icon: Wrench, roles: ["SUPERADMIN", "ADMIN"] },
+  { href: "/reports", label: "Relatórios", icon: BarChart, roles: ["SUPERADMIN", "ADMIN"] },
+  { href: "/settings", label: "Configurações", icon: Settings, roles: ["SUPERADMIN"] },
+];
+
 const DashboardLayout = ({ children, title }: DashboardLayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
 
-  const handleLogout = () => {
-    console.log("Usuário deslogado.");
-    navigate("/login");
-  };
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
-  const navItems = [
-    { href: "/dashboard", label: "Dashboard", icon: Home },
-    { href: "/trucks", label: "Caminhões", icon: Truck },
-    { href: "/service-orders", label: "Ordens de Serviço", icon: FileText },
-    { href: "/clients", label: "Clientes", icon: Users },
-    { href: "/maintenance", label: "Manutenção", icon: Wrench },
-    { href: "/reports", label: "Relatórios", icon: BarChart },
-  ];
+  if (!user) {
+    return null; // ou uma tela de loading
+  }
+
+  const navItems = allNavItems.filter(item => item.roles.includes(user.role));
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -45,10 +56,6 @@ const DashboardLayout = ({ children, title }: DashboardLayoutProps) => {
               <Package2 className="h-6 w-6" />
               <span className="">Soneto 4.5</span>
             </Link>
-            <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
-              <Bell className="h-4 w-4" />
-              <span className="sr-only">Toggle notifications</span>
-            </Button>
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -70,21 +77,7 @@ const DashboardLayout = ({ children, title }: DashboardLayoutProps) => {
             </nav>
           </div>
           <div className="mt-auto p-4">
-             <nav className="grid items-start px-2 text-sm font-medium lg:px-4 mb-2">
-               <Link
-                  to="/settings"
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
-                    location.pathname === "/settings"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  )}
-                >
-                  <Settings className="h-4 w-4" />
-                  Configurações
-                </Link>
-             </nav>
-            <Button size="sm" className="w-full" onClick={handleLogout}>
+            <Button size="sm" className="w-full" onClick={logout}>
               Sair
             </Button>
           </div>
@@ -95,6 +88,7 @@ const DashboardLayout = ({ children, title }: DashboardLayoutProps) => {
           <div className="w-full flex-1">
             <h1 className="text-lg font-semibold">{title}</h1>
           </div>
+          <UserNav />
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           {children}

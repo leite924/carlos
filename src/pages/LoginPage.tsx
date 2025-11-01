@@ -1,16 +1,4 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -18,74 +6,44 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link, useNavigate } from "react-router-dom";
-
-const formSchema = z.object({
-  email: z.string().email({ message: "Email inválido." }),
-  password: z.string().min(6, { message: "A senha deve ter pelo menos 6 caracteres." }),
-});
+import { useAuth } from "@/context/AuthContext";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
+  const { login } = useAuth();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Dados do Login:", values);
-    // Simula um login bem-sucedido e redireciona para o dashboard
-    navigate("/dashboard");
-  }
+  const handleLogin = (role: "SUPERADMIN" | "ADMIN" | "MOTORISTA") => {
+    let user = { name: "", email: "", role };
+    switch (role) {
+      case "SUPERADMIN":
+        user = { name: "Super Admin", email: "super@soneto45.com", role };
+        break;
+      case "ADMIN":
+        user = { name: "Admin", email: "admin@soneto45.com", role };
+        break;
+      case "MOTORISTA":
+        user = { name: "Carlos (Motorista)", email: "carlos@soneto45.com", role };
+        break;
+    }
+    login(user);
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Login</CardTitle>
-          <CardDescription>Acesse sua conta para continuar.</CardDescription>
+          <CardTitle>Simulação de Login</CardTitle>
+          <CardDescription>Escolha um papel para acessar o painel.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="seu@email.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Senha</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="******" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full">Entrar</Button>
-            </form>
-          </Form>
-          <div className="mt-4 text-center text-sm">
-            Não tem uma conta?{" "}
-            <Link to="/register" className="underline">
-              Registre-se
-            </Link>
-          </div>
+        <CardContent className="space-y-4">
+          <Button className="w-full" onClick={() => handleLogin("SUPERADMIN")}>
+            Entrar como Super Admin
+          </Button>
+          <Button className="w-full" variant="secondary" onClick={() => handleLogin("ADMIN")}>
+            Entrar como Admin
+          </Button>
+          <Button className="w-full" variant="outline" onClick={() => handleLogin("MOTORISTA")}>
+            Entrar como Motorista
+          </Button>
         </CardContent>
       </Card>
     </div>
