@@ -18,7 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Email inválido." }),
@@ -26,6 +26,7 @@ const formSchema = z.object({
 });
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,10 +36,9 @@ const LoginPage = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Por enquanto, vamos apenas exibir os dados no console.
-    // A lógica de autenticação será adicionada depois.
     console.log("Dados do Login:", values);
-    alert("Login (simulado) com sucesso! Verifique o console.");
+    // Simula um login bem-sucedido e redireciona para o dashboard
+    navigate("/dashboard");
   }
 
   return (
