@@ -1,6 +1,5 @@
 import DashboardLayout from "@/components/DashboardLayout";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { AddClientDialog } from "@/components/AddClientDialog";
 
 const ClientsPage = () => {
   return (
@@ -8,10 +7,7 @@ const ClientsPage = () => {
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Gerenciar Clientes</h1>
         <div className="ml-auto">
-          <Button size="sm">
-            <PlusCircle className="h-4 w-4 mr-2" />
-            Adicionar Cliente
-          </Button>
+          <AddClientDialog />
         </div>
       </div>
       <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">

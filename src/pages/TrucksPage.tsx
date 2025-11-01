@@ -1,6 +1,5 @@
 import DashboardLayout from "@/components/DashboardLayout";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { AddTruckDialog } from "@/components/AddTruckDialog";
 
 const TrucksPage = () => {
   return (
@@ -8,10 +7,7 @@ const TrucksPage = () => {
       <div className="flex items-center">
         <h1 className="text-lg font-semibold md:text-2xl">Gerenciar Caminhões</h1>
         <div className="ml-auto">
-          <Button size="sm">
-            <PlusCircle className="h-4 w-4 mr-2" />
-            Adicionar Caminhão
-          </Button>
+          <AddTruckDialog />
         </div>
       </div>
       <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
