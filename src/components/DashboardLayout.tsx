@@ -7,6 +7,9 @@ import {
   Users,
   Truck,
   FileText,
+  Wrench,
+  BarChart,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +32,8 @@ const DashboardLayout = ({ children, title }: DashboardLayoutProps) => {
     { href: "/trucks", label: "Caminhões", icon: Truck },
     { href: "/service-orders", label: "Ordens de Serviço", icon: FileText },
     { href: "/clients", label: "Clientes", icon: Users },
+    { href: "/maintenance", label: "Manutenção", icon: Wrench },
+    { href: "/reports", label: "Relatórios", icon: BarChart },
   ];
 
   return (
@@ -65,6 +70,20 @@ const DashboardLayout = ({ children, title }: DashboardLayoutProps) => {
             </nav>
           </div>
           <div className="mt-auto p-4">
+             <nav className="grid items-start px-2 text-sm font-medium lg:px-4 mb-2">
+               <Link
+                  to="/settings"
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
+                    location.pathname === "/settings"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  <Settings className="h-4 w-4" />
+                  Configurações
+                </Link>
+             </nav>
             <Button size="sm" className="w-full" onClick={handleLogout}>
               Sair
             </Button>
